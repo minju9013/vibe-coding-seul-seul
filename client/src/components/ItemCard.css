@@ -102,7 +102,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .item-status {
@@ -140,13 +139,12 @@
   height: fit-content;
   padding: 4px 0 0;
   text-align: center;
-  overflow: hidden;
 }
 
 .spinner-button {
-  width: 40px;
+  width: 36px;
   height: 40px;
-  min-width: 40px;
+  min-width: 36px;
   min-height: 40px;
   flex-shrink: 0;
   border: 1px solid #e5e7eb;
