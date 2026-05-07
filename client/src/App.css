@@ -19,15 +19,15 @@
   position: fixed;
   right: 18px;
   bottom: 18px;
-  width: 62px;
-  height: 62px;
+  width: 54px;
+  height: 54px;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(145deg, #1bc8b3, #0ea5a3);
   color: #fff;
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1;
-  box-shadow: 0 10px 24px rgba(20, 184, 166, 0.35);
+  box-shadow: 0 10px 24px #14b8a659;
 }
 
 .page-error {
