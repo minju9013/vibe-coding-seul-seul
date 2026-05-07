@@ -151,9 +151,10 @@
   height: 4px;
   border-radius: 999px;
   background: #e5e7eb;
-  margin: 8px auto 4px;
+  margin: 16px auto 16px;
   cursor: grab;
   touch-action: none;
+  -webkit-user-select: none;
   user-select: none;
 }
 
