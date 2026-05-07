@@ -17,6 +17,13 @@ function clampLowStockThreshold(value) {
   return Math.round(n);
 }
 
+function normalizeName(value) {
+  return String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLocaleLowerCase('ko-KR');
+}
+
 function AddItemModal({
   isOpen,
   categories = [],
@@ -177,15 +184,16 @@ function AddItemModal({
 
   const trimmedName = name.trim();
 
-  const normalizedName = trimmedName.toLocaleLowerCase('ko-KR');
+  const normalizedName = normalizeName(trimmedName);
 
   const isDuplicate = useMemo(() => {
-    if (!normalizedName) return false;
+    if (!normalizedName || !categoryId) return false;
     return items.some((it) => {
-      if (it.categoryId !== categoryId) return false;
-      const itemName = String(it.name || '').trim().toLocaleLowerCase('ko-KR');
+      if (!it || !it.name || !it.categoryId) return false;
+      if (String(it.categoryId) !== String(categoryId)) return false;
+      const itemName = normalizeName(it.name);
       if (itemName !== normalizedName) return false;
-      if (editingItem && it.id === editingItem.id) return false;
+      if (editingItem && String(it.id) === String(editingItem.id)) return false;
       return true;
     });
   }, [items, categoryId, normalizedName, editingItem]);
