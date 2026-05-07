@@ -20,6 +20,7 @@ function CategoryTabs({
   const tabs = [ALL_CATEGORY, ...categories];
 
   const handleDragStart = (e, catId) => {
+    e.preventDefault();
     setDragId(catId);
     setDragOverId(null);
   };
