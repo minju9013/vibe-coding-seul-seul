@@ -76,6 +76,14 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
+.category-sort-sheet-row.is-dragging {
+  opacity: 0.45;
+}
+
+.category-sort-sheet-row.is-drag-over {
+  background: rgba(23, 190, 176, 0.08);
+}
+
 .category-sort-sheet-label {
   display: inline-flex;
   align-items: center;
@@ -83,6 +91,23 @@
   color: #1f2937;
   font-size: 15px;
   font-weight: 600;
+}
+
+.category-sort-sheet-drag-handle {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #94a3b8;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
 .category-sort-sheet-emoji {
