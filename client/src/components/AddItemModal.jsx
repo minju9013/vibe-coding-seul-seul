@@ -486,31 +486,31 @@ function AddItemModal({
               maxLength={500}
             />
           </section>
-        </div>
 
-        <div className="add-item-footer">
-          {submitError && (
-            <p className="add-item-error" role="alert">
-              {submitError}
-            </p>
-          )}
-          <button
-            type="submit"
-            className="add-item-submit"
-            disabled={!canSubmit}
-          >
-            {submitting ? '저장 중...' : isEditMode ? '저장하기' : '추가하기'}
-          </button>
-          {isEditMode && (
+          <div className="add-item-footer">
+            {submitError && (
+              <p className="add-item-error" role="alert">
+                {submitError}
+              </p>
+            )}
             <button
-              type="button"
-              className="add-item-delete"
-              onClick={() => setConfirmDelete(true)}
-              disabled={submitting || deleting}
+              type="submit"
+              className="add-item-submit"
+              disabled={!canSubmit}
             >
-              삭제하기
+              {submitting ? '저장 중...' : isEditMode ? '저장하기' : '추가하기'}
             </button>
-          )}
+            {isEditMode && (
+              <button
+                type="button"
+                className="add-item-delete"
+                onClick={() => setConfirmDelete(true)}
+                disabled={submitting || deleting}
+              >
+                삭제하기
+              </button>
+            )}
+          </div>
         </div>
 
         {confirmDelete && (
