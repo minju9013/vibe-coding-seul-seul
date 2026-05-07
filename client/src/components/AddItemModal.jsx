@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { uploadImage } from '../api/itemsApi';
 import useModalFocusTrap from '../hooks/useModalFocusTrap';
 import './AddItemModal.css';
@@ -21,6 +21,7 @@ function AddItemModal({
   isOpen,
   categories = [],
   defaultCategoryId,
+  items = [],
   editingItem = null,
   onClose,
   onAdd,
@@ -176,7 +177,20 @@ function AddItemModal({
 
   const trimmedName = name.trim();
 
-  const canSubmit = trimmedName.length > 0 && !submitting;
+  const normalizedName = trimmedName.toLocaleLowerCase('ko-KR');
+
+  const isDuplicate = useMemo(() => {
+    if (!normalizedName) return false;
+    return items.some((it) => {
+      if (it.categoryId !== categoryId) return false;
+      const itemName = String(it.name || '').trim().toLocaleLowerCase('ko-KR');
+      if (itemName !== normalizedName) return false;
+      if (editingItem && it.id === editingItem.id) return false;
+      return true;
+    });
+  }, [items, categoryId, normalizedName, editingItem]);
+
+  const canSubmit = trimmedName.length > 0 && !isDuplicate && !submitting;
 
   if (!isOpen) return null;
 
@@ -453,12 +467,21 @@ function AddItemModal({
               id="add-item-name"
               ref={nameInputRef}
               type="text"
-              className="add-item-input"
+              className={
+                isDuplicate ? 'add-item-input is-error' : 'add-item-input'
+              }
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="예: 시드물 스킨"
               maxLength={30}
+              aria-invalid={isDuplicate || undefined}
+              aria-describedby={isDuplicate ? 'add-item-name-error' : undefined}
             />
+            {isDuplicate && (
+              <p id="add-item-name-error" className="add-item-error">
+                같은 카테고리에 이미 등록된 이름이에요.
+              </p>
+            )}
           </section>
 
           <section className="add-item-field">
