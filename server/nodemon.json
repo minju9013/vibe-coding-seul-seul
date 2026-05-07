@@ -1,0 +1,9 @@
+{
+  "watch": ["src", "models", "routes", "controllers", "constants", "utils"],
+  "ext": "js,json",
+  "ignore": ["node_modules"],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "exec": "node src/index.js"
+}

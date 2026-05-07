@@ -1,0 +1,72 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+  color: rgba(22, 190, 176, 1);
+}
+
+.mobile-frame {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background: #fff;
+  padding-bottom: 96px;
+}
+
+.floating-add-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 62px;
+  height: 62px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #1bc8b3, #0ea5a3);
+  color: #fff;
+  font-size: 40px;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(20, 184, 166, 0.35);
+}
+
+.page-error {
+  margin: 8px 20px 0;
+  padding: 10px 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.page-error-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-error-retry {
+  flex: none;
+  border: 1px solid #b91c1c;
+  background: #fff;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.page-error-retry:hover {
+  background: #fef2f2;
+}
+
+@media (min-width: 431px) {
+  .floating-add-button {
+    right: calc(50% - 215px + 18px);
+  }
+}

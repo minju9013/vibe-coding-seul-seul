@@ -1,0 +1,66 @@
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: #fff;
+}
+
+.app-bar-inner {
+  height: 64px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  width: fit-content;
+  height: fit-content;
+  justify-content: center;
+}
+
+.brand-text {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: #111827;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.app-bar-search-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.app-bar-search-btn:hover {
+  background: transparent;
+  color: #1e293b;
+}
+
+.app-bar-search-btn.is-active {
+  background: transparent;
+  color: #475569;
+}
+
+.app-bar-search-btn:active {
+  transform: scale(0.97);
+}
+
+.app-bar-search-icon {
+  flex: 0 0 auto;
+}

@@ -1,0 +1,232 @@
+.category-tabs-wrap {
+  padding: 2px 0 0;
+  position: sticky;
+  top: 64px;
+  z-index: 25;
+  background: #fff;
+}
+
+.category-tabs-scroll {
+  overflow-x: auto;
+  padding: 0 20px;
+  /* 탭 행 너비와 무관하게 스크롤 영역(모바일 프레임) 전체 폭으로 구분선 표시 */
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.category-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 라인 탭: 가로로 흐르는 텍스트들 + 아래에 1px 베이스라인.
+   액티브 탭은 색 + bold + 하단 strong underline 으로 구분한다. */
+.category-tab-cell {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.category-tab-reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-tab-order-btn {
+  width: 22px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.category-tab-order-btn:hover {
+  border-color: #17beb0;
+  color: #17beb0;
+}
+
+.category-tabs-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  min-width: max-content;
+}
+
+.category-tab {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  height: 42px;
+  padding: 0 14px;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.category-tab:hover:not(.is-active):not(.is-add):not(.is-manage-toggle) {
+  color: #1f2937;
+}
+
+/* 액티브 탭 하단 강조 (베이스라인 1px 위에 2px 색상 underline) */
+.category-tab::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -2px;
+  height: 4px;
+  z-index: 5;
+}
+
+.category-tab.is-active {
+  color: #17beb0;
+  font-weight: 700;
+}
+
+.category-tab.is-active::after {
+  background: #17beb0;
+}
+
+/* "+ 카테고리 추가" 버튼: 라인 탭과 차별화(점선), 모서리는 설정 버튼과 동일 */
+.category-tab.is-add {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #64748b;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 6px;
+  gap: 4px;
+  flex: none;
+}
+
+.category-tab.is-add::after {
+  display: none;
+}
+
+.category-tab.is-add:hover {
+  border-color: #17beb0;
+  color: #17beb0;
+  background: rgba(23, 190, 176, 0.06);
+}
+
+.category-tab.is-add:active {
+  background: rgba(23, 190, 176, 0.12);
+}
+
+.category-tab-add-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* "관리(톱니) / 완료(체크)" 토글: 라인 탭과 분리되는 작은 아이콘 버튼.
+   평소엔 아이콘만 보이는 원형 버튼이고, 편집 모드에선 체크 + "완료" 텍스트가 함께 노출된다. */
+.category-tab.is-manage-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 6px;
+  flex: none;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.category-tab.is-manage-toggle::after {
+  display: none;
+}
+
+.category-tab.is-manage-toggle:hover {
+  color: #6b7280;
+  background: #f9fafb;
+  border-color: #cbd5e1;
+}
+
+/* 편집 모드: 체크 + "완료" 텍스트가 노출되도록 너비를 풀어주고 브랜드 톤으로 강조 (라운드는 설정과 동일) */
+.category-tab.is-manage-toggle.is-editing {
+  width: auto;
+  padding: 0 12px;
+  border: 1px solid rgba(23, 190, 176, 0.45);
+  border-radius: 8px;
+  background: rgba(23, 190, 176, 0.1);
+  color: #0e9384;
+}
+
+.category-tab.is-manage-toggle.is-editing:hover {
+  background: rgba(23, 190, 176, 0.16);
+  color: #0e9384;
+}
+
+.category-manage-icon {
+  display: block;
+}
+
+/* 편집 모드: ✕ 뱃지가 붙은 탭은 살짝 흔들리는 모션 */
+.category-tab.has-remove {
+  padding-right: 26px;
+  animation: category-tab-wiggle 1.6s ease-in-out infinite;
+}
+
+.category-tab.is-editable {
+  cursor: pointer;
+}
+
+.category-tab-remove {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+  outline: none;
+  z-index: 1;
+}
+
+.category-tab-remove:focus-visible {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35);
+}
+
+@keyframes category-tab-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-1deg); }
+  75% { transform: rotate(1deg); }
+}
