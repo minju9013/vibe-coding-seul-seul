@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "cd server && node src/index.js",
-    "heroku-postbuild": "cd server && npm install"
+    "heroku-postbuild": "cd server && npm install --production=false"
   },
   "engines": {
     "node": ">=20.0.0"
