@@ -3,7 +3,9 @@
 // - 서버 응답은 이미 평탄화된 형태({ id, name, categoryId, image, quantity, status, ... })
 //   라서 그대로 클라이언트 상태로 사용할 수 있다.
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api`
+  : '/api';
 
 class ApiError extends Error {
   constructor(message, status) {

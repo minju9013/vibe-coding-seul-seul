@@ -12,7 +12,11 @@ const preferencesRoutes = require('./routes/preferences');
 const app = express();
 
 // 공통 미들웨어
-app.use(cors());
+// CORS_ORIGIN 환경변수가 있으면 해당 도메인만 허용, 없으면 전체 허용 (개발 환경)
+const corsOptions = process.env.CORS_ORIGIN
+  ? { origin: process.env.CORS_ORIGIN.split(',').map((s) => s.trim()) }
+  : {};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 
