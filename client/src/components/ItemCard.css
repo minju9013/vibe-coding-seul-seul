@@ -52,6 +52,10 @@
   font-weight: 800;
   color: #111827;
   line-height: 1.3;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-edit-button {
