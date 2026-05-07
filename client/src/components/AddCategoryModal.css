@@ -96,12 +96,12 @@
 
 .add-category-emoji-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 8px;
 }
 
 .add-category-emoji-chip {
-  height: 40px;
+  height: 48px;
   border-radius: 12px;
   border: 1px solid #ededed;
   background: #fff;
