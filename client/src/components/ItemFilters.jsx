@@ -31,6 +31,9 @@ function ItemFilters({
   const [isSortSheetDragging, setIsSortSheetDragging] = useState(false);
   const sortDragStartYRef = useRef(0);
   const sortDragOffsetYRef = useRef(0);
+  const sortDragLastYRef = useRef(0);
+  const sortDragLastTsRef = useRef(0);
+  const sortDragVelocityRef = useRef(0);
   const activeSortOption = useMemo(
     () => ITEM_SORT_OPTIONS.find((opt) => opt.id === sortKey) || ITEM_SORT_OPTIONS[0],
     [sortKey],
@@ -53,32 +56,71 @@ function ItemFilters({
     }
   }, [isSortSheetOpen]);
 
+  useEffect(() => {
+    if (!isSortSheetDragging) return undefined;
+
+    const getClientY = (event) => {
+      if (typeof event.clientY === 'number') return event.clientY;
+      const touch = event.touches?.[0] || event.changedTouches?.[0];
+      return touch?.clientY ?? null;
+    };
+
+    const onMove = (event) => {
+      const clientY = getClientY(event);
+      if (clientY == null) return;
+      if (event.cancelable) event.preventDefault();
+      const nextY = Math.max(0, clientY - sortDragStartYRef.current);
+      sortDragOffsetYRef.current = nextY;
+      const now = performance.now();
+      const dt = Math.max(1, now - sortDragLastTsRef.current);
+      sortDragVelocityRef.current = (clientY - sortDragLastYRef.current) / dt;
+      sortDragLastYRef.current = clientY;
+      sortDragLastTsRef.current = now;
+      setSortSheetDragY(nextY);
+    };
+
+    const onEnd = () => {
+      const shouldClose =
+        sortDragOffsetYRef.current >= 90 ||
+        (sortDragOffsetYRef.current >= 24 && sortDragVelocityRef.current > 0.65);
+      setIsSortSheetDragging(false);
+      sortDragOffsetYRef.current = 0;
+      sortDragVelocityRef.current = 0;
+      if (shouldClose) {
+        setSortSheetDragY(0);
+        setSortSheetOpen(false);
+        return;
+      }
+      setSortSheetDragY(0);
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: false });
+    window.addEventListener('pointerup', onEnd);
+    window.addEventListener('pointercancel', onEnd);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+    window.addEventListener('touchcancel', onEnd);
+
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onEnd);
+      window.removeEventListener('pointercancel', onEnd);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onEnd);
+      window.removeEventListener('touchcancel', onEnd);
+    };
+  }, [isSortSheetDragging]);
+
   const handleSortSheetDragStart = (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.cancelable) e.preventDefault();
     sortDragStartYRef.current = e.clientY;
+    sortDragLastYRef.current = e.clientY;
+    sortDragLastTsRef.current = performance.now();
+    sortDragVelocityRef.current = 0;
     sortDragOffsetYRef.current = 0;
     setIsSortSheetDragging(true);
     e.currentTarget.setPointerCapture?.(e.pointerId);
-  };
-
-  const handleSortSheetDragMove = (e) => {
-    if (!isSortSheetDragging) return;
-    const nextY = Math.max(0, e.clientY - sortDragStartYRef.current);
-    sortDragOffsetYRef.current = nextY;
-    setSortSheetDragY(nextY);
-  };
-
-  const handleSortSheetDragEnd = () => {
-    if (!isSortSheetDragging) return;
-    const shouldClose = sortDragOffsetYRef.current >= 90;
-    setIsSortSheetDragging(false);
-    sortDragOffsetYRef.current = 0;
-    if (shouldClose) {
-      setSortSheetDragY(0);
-      setSortSheetOpen(false);
-      return;
-    }
-    setSortSheetDragY(0);
   };
 
   return (
@@ -163,9 +205,6 @@ function ItemFilters({
               className="item-filters-sort-sheet-handle"
               aria-hidden="true"
               onPointerDown={handleSortSheetDragStart}
-              onPointerMove={handleSortSheetDragMove}
-              onPointerUp={handleSortSheetDragEnd}
-              onPointerCancel={handleSortSheetDragEnd}
             />
             <div className="item-filters-sort-sheet-header">
               <h3 className="item-filters-sort-sheet-title">정렬</h3>

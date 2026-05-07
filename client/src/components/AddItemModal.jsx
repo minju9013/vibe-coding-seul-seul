@@ -53,6 +53,9 @@ function AddItemModal({
   const objectUrlRef = useRef(null);
   const dragStartYRef = useRef(0);
   const dragOffsetYRef = useRef(0);
+  const dragLastYRef = useRef(0);
+  const dragLastTsRef = useRef(0);
+  const dragVelocityRef = useRef(0);
 
   useModalFocusTrap(sheetRef, isOpen);
 
@@ -113,6 +116,61 @@ function AddItemModal({
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, onClose, submitting, deleting, confirmDelete]);
+
+  useEffect(() => {
+    if (!isSheetDragging) return undefined;
+
+    const getClientY = (event) => {
+      if (typeof event.clientY === 'number') return event.clientY;
+      const touch = event.touches?.[0] || event.changedTouches?.[0];
+      return touch?.clientY ?? null;
+    };
+
+    const onMove = (event) => {
+      const clientY = getClientY(event);
+      if (clientY == null) return;
+      if (event.cancelable) event.preventDefault();
+      const nextY = Math.max(0, clientY - dragStartYRef.current);
+      dragOffsetYRef.current = nextY;
+      const now = performance.now();
+      const dt = Math.max(1, now - dragLastTsRef.current);
+      dragVelocityRef.current = (clientY - dragLastYRef.current) / dt;
+      dragLastYRef.current = clientY;
+      dragLastTsRef.current = now;
+      setSheetDragY(nextY);
+    };
+
+    const onEnd = () => {
+      const shouldClose =
+        dragOffsetYRef.current >= 90 ||
+        (dragOffsetYRef.current >= 24 && dragVelocityRef.current > 0.65);
+      setIsSheetDragging(false);
+      dragOffsetYRef.current = 0;
+      dragVelocityRef.current = 0;
+      if (shouldClose) {
+        setSheetDragY(0);
+        onClose?.();
+        return;
+      }
+      setSheetDragY(0);
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: false });
+    window.addEventListener('pointerup', onEnd);
+    window.addEventListener('pointercancel', onEnd);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+    window.addEventListener('touchcancel', onEnd);
+
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onEnd);
+      window.removeEventListener('pointercancel', onEnd);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onEnd);
+      window.removeEventListener('touchcancel', onEnd);
+    };
+  }, [isSheetDragging, onClose]);
 
   // 컴포넌트 unmount 시 마지막 정리
   useEffect(() => () => revokeObjectUrl(), []);
@@ -225,30 +283,14 @@ function AddItemModal({
   const handleSheetDragStart = (e) => {
     if (submitting || deleting) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.cancelable) e.preventDefault();
     dragStartYRef.current = e.clientY;
+    dragLastYRef.current = e.clientY;
+    dragLastTsRef.current = performance.now();
+    dragVelocityRef.current = 0;
     dragOffsetYRef.current = 0;
     setIsSheetDragging(true);
     e.currentTarget.setPointerCapture?.(e.pointerId);
-  };
-
-  const handleSheetDragMove = (e) => {
-    if (!isSheetDragging) return;
-    const nextY = Math.max(0, e.clientY - dragStartYRef.current);
-    dragOffsetYRef.current = nextY;
-    setSheetDragY(nextY);
-  };
-
-  const handleSheetDragEnd = () => {
-    if (!isSheetDragging) return;
-    const shouldClose = dragOffsetYRef.current >= 90;
-    setIsSheetDragging(false);
-    dragOffsetYRef.current = 0;
-    if (shouldClose) {
-      setSheetDragY(0);
-      onClose?.();
-      return;
-    }
-    setSheetDragY(0);
   };
 
   return (
@@ -279,9 +321,6 @@ function AddItemModal({
           className="add-item-handle"
           aria-hidden="true"
           onPointerDown={handleSheetDragStart}
-          onPointerMove={handleSheetDragMove}
-          onPointerUp={handleSheetDragEnd}
-          onPointerCancel={handleSheetDragEnd}
         />
         <div className="add-item-header">
           <h2 className="add-item-title">
