@@ -16,15 +16,15 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   width: fit-content;
   height: fit-content;
   justify-content: center;
 }
 
 .brand-icon {
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
   border-radius: 6px;
   flex-shrink: 0;
 }

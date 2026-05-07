@@ -531,7 +531,34 @@ function AddItemModal({
             />
           </section>
 
-          <div className={isEditMode ? 'add-item-footer' : 'add-item-footer is-fixed'}>
+          {isEditMode && (
+            <div className="add-item-footer">
+              {submitError && (
+                <p className="add-item-error" role="alert">
+                  {submitError}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="add-item-submit"
+                disabled={!canSubmit}
+              >
+                {submitting ? '저장 중...' : '저장하기'}
+              </button>
+              <button
+                type="button"
+                className="add-item-delete"
+                onClick={() => setConfirmDelete(true)}
+                disabled={submitting || deleting}
+              >
+                삭제하기
+              </button>
+            </div>
+          )}
+        </div>
+
+        {!isEditMode && (
+          <div className="add-item-footer is-fixed-bottom">
             {submitError && (
               <p className="add-item-error" role="alert">
                 {submitError}
@@ -542,20 +569,10 @@ function AddItemModal({
               className="add-item-submit"
               disabled={!canSubmit}
             >
-              {submitting ? '저장 중...' : isEditMode ? '저장하기' : '추가하기'}
+              {submitting ? '저장 중...' : '추가하기'}
             </button>
-            {isEditMode && (
-              <button
-                type="button"
-                className="add-item-delete"
-                onClick={() => setConfirmDelete(true)}
-                disabled={submitting || deleting}
-              >
-                삭제하기
-              </button>
-            )}
           </div>
-        </div>
+        )}
 
         {confirmDelete && (
           <div className="add-item-confirm" role="dialog" aria-modal="true">
