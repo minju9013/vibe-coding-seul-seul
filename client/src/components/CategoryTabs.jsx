@@ -1,11 +1,7 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { ALL_CATEGORY, ALL_CATEGORY_ID } from '../data/categories';
 import './CategoryTabs.css';
 
-// 편집 모드 동작 정리:
-//  - 평소: 카테고리 탭들 끝에 톱니(설정) 아이콘 → 누르면 편집 모드 진입
-//  - 편집 모드: 탭 클릭 = 수정, ✕ 클릭 = 삭제, 끝쪽 "+ 추가" 탭으로 신규 추가, 체크/완료 클릭 시 편집 종료
-//  - "전체" 메타 탭은 편집 대상이 아니므로 평소처럼 활성화 전환만 동작
 function CategoryTabs({
   categories = [],
   activeCategoryId,
@@ -17,20 +13,66 @@ function CategoryTabs({
   onRequestDelete,
   onReorderCategory,
 }) {
+  const [dragId, setDragId] = useState(null);
+  const [dragOverId, setDragOverId] = useState(null);
+  const rowRef = useRef(null);
+
   const tabs = [ALL_CATEGORY, ...categories];
+
+  const handleDragStart = (e, catId) => {
+    setDragId(catId);
+    setDragOverId(null);
+  };
+
+  const handleDragMove = (e) => {
+    if (!dragId || !rowRef.current) return;
+    const cells = rowRef.current.querySelectorAll('[data-drag-id]');
+    for (const cell of cells) {
+      const rect = cell.getBoundingClientRect();
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top - 20 &&
+        e.clientY <= rect.bottom + 20
+      ) {
+        const id = cell.dataset.dragId;
+        if (id && id !== dragId) {
+          if (id !== dragOverId) setDragOverId(id);
+          return;
+        }
+      }
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (dragId && dragOverId && dragId !== dragOverId) {
+      onReorderCategory?.(dragId, dragOverId);
+    }
+    setDragId(null);
+    setDragOverId(null);
+  };
 
   return (
     <div className="category-tabs-wrap">
       <div className="category-tabs-scroll">
-        <div className="category-tabs-row">
+        <div
+          ref={rowRef}
+          className={`category-tabs-row${dragId ? ' is-reordering' : ''}`}
+          onPointerMove={dragId ? handleDragMove : undefined}
+          onPointerUp={dragId ? handleDragEnd : undefined}
+          onPointerLeave={dragId ? handleDragEnd : undefined}
+        >
           {tabs.map((cat) => {
             const isActive = activeCategoryId === cat.id;
             const isAll = cat.id === ALL_CATEGORY_ID;
             const showRemove = isEditing && !isAll;
             const interactsAsEdit = isEditing && !isAll;
-            const showReorder = Boolean(isEditing && !isAll && onReorderCategory);
+            const isDraggable = Boolean(isEditing && !isAll && onReorderCategory);
+            const isDragging = dragId === cat.id;
+            const isDragOver = dragOverId === cat.id;
 
             const handleClick = () => {
+              if (dragId) return;
               if (interactsAsEdit) {
                 onRequestEdit?.(cat);
               } else {
@@ -41,20 +83,25 @@ function CategoryTabs({
             return (
               <div
                 key={cat.id}
-                className={showReorder ? 'category-tab-cell has-reorder' : 'category-tab-cell'}
+                data-drag-id={isDraggable ? cat.id : undefined}
+                className={[
+                  'category-tab-cell',
+                  isDraggable ? 'is-draggable' : '',
+                  isDragging ? 'is-dragging' : '',
+                  isDragOver ? 'is-drag-over' : '',
+                ].filter(Boolean).join(' ')}
+                onPointerDown={isDraggable ? (e) => handleDragStart(e, cat.id) : undefined}
               >
                 <button
                   type="button"
                   onClick={handleClick}
-                  className={
-                    (isActive ? 'category-tab is-active' : 'category-tab') +
-                    (showRemove ? ' has-remove' : '') +
-                    (interactsAsEdit ? ' is-editable' : '')
-                  }
+                  className={[
+                    isActive ? 'category-tab is-active' : 'category-tab',
+                    showRemove ? 'has-remove' : '',
+                    interactsAsEdit ? 'is-editable' : '',
+                  ].filter(Boolean).join(' ')}
                   aria-label={
-                    interactsAsEdit
-                      ? `${cat.label} 카테고리 수정`
-                      : undefined
+                    interactsAsEdit ? `${cat.label} 카테고리 수정` : undefined
                   }
                 >
                   <span>{cat.label}</span>
@@ -87,36 +134,6 @@ function CategoryTabs({
                     </span>
                   )}
                 </button>
-                {showReorder && (
-                  <div
-                    className="category-tab-reorder"
-                    role="group"
-                    aria-label={`${cat.label} 순서 변경`}
-                  >
-                    <button
-                      type="button"
-                      className="category-tab-order-btn"
-                      aria-label="앞으로 이동"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onReorderCategory(cat.id, -1);
-                      }}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      className="category-tab-order-btn"
-                      aria-label="뒤로 이동"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onReorderCategory(cat.id, 1);
-                      }}
-                    >
-                      ↓
-                    </button>
-                  </div>
-                )}
               </div>
             );
           })}

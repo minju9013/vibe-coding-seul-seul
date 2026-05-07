@@ -27,30 +27,24 @@
   flex: none;
 }
 
-.category-tab-reorder {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.category-tab-cell.is-draggable {
+  cursor: grab;
+  touch-action: none;
 }
 
-.category-tab-order-btn {
-  width: 22px;
-  height: 18px;
-  padding: 0;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  background: #fff;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-  font-family: inherit;
+.category-tab-cell.is-dragging {
+  opacity: 0.35;
 }
 
-.category-tab-order-btn:hover {
-  border-color: #17beb0;
+.category-tab-cell.is-drag-over > .category-tab {
+  background: rgba(23, 190, 176, 0.1);
+  border-radius: 8px;
   color: #17beb0;
+}
+
+.category-tabs-row.is-reordering {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .category-tabs-row {

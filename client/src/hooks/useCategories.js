@@ -160,6 +160,27 @@ export default function useCategories() {
     [categoriesMerged, setCategoryOrder],
   );
 
+  const reorderCategory = useCallback(
+    (fromId, toId) => {
+      setCategoryOrder((prevOrder) => {
+        const merged = categoriesMerged;
+        const idSet = new Set(merged.map((c) => c.id));
+        let order = prevOrder.filter((cid) => idSet.has(cid));
+        for (const c of merged) {
+          if (!order.includes(c.id)) order.push(c.id);
+        }
+        const fromIdx = order.indexOf(fromId);
+        const toIdx = order.indexOf(toId);
+        if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return prevOrder;
+        const next = [...order];
+        next.splice(fromIdx, 1);
+        next.splice(toIdx, 0, fromId);
+        return next;
+      });
+    },
+    [categoriesMerged, setCategoryOrder],
+  );
+
   const isLabelDuplicate = useCallback(
     (label, excludeId) => {
       const trimmed = (label || '').trim();
@@ -279,6 +300,7 @@ export default function useCategories() {
     removeCategory,
     resetCategory,
     moveCategory,
+    reorderCategory,
     applyCategoryImport,
     categoryPersistence,
     isBuiltInId,

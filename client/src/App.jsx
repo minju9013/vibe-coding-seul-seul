@@ -49,6 +49,7 @@ function App() {
     removeCategory,
     resetCategory,
     moveCategory,
+    reorderCategory,
     MAX_LABEL_LENGTH,
   } = useCategories();
 
@@ -282,7 +283,7 @@ function App() {
           onToggleEdit={handleToggleEditCategories}
           onRequestEdit={handleRequestEditCategory}
           onRequestDelete={handleRequestDeleteCategory}
-          onReorderCategory={moveCategory}
+          onReorderCategory={reorderCategory}
         />
         <ItemFilters
           searchQuery={searchQuery}
