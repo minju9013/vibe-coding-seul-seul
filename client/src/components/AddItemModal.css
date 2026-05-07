@@ -345,7 +345,7 @@
   position: sticky;
   bottom: calc(env(safe-area-inset-bottom, 0px) * -1);
   margin: 0 -20px;
-  padding: 10px 20px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  padding: 10px 20px 0;
   background: #fff;
   z-index: 2;
 }
