@@ -6,6 +6,12 @@ function AppBar({ onSearchClick, searchHighlighted = false }) {
     <header className="app-bar">
       <div className="app-bar-inner">
         <div className="brand">
+          <img
+            src="/favicon-v2.png?v=2"
+            alt=""
+            aria-hidden="true"
+            className="brand-icon"
+          />
           <div className="brand-text">슬슬살게</div>
         </div>
         <button
