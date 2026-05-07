@@ -102,7 +102,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 4px;
+  padding: 4px 2px 0;
 }
 
 .item-status {
@@ -132,11 +132,11 @@
 }
 
 .spinner {
-  --spinner-btn-size: clamp(32px, 28%, 40px);
+  --spinner-btn-size: 40px;
   display: grid;
   grid-template-columns: var(--spinner-btn-size) minmax(0, 1fr) var(--spinner-btn-size);
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   height: 40px;
   min-width: 0;
@@ -169,12 +169,15 @@
   border: 0;
   text-align: center;
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 34px;
+  font-size: 32px;
+  transform: scale(0.5);
+  transform-origin: center center;
   font-weight: 700;
   color: #111827;
   background: transparent;
-  padding: 0;
-  line-height: 40px;
+  padding-top: 4px;
+  padding-bottom: 0;
+  line-height: 1;
 }
 
 .spinner-input::-webkit-outer-spin-button,
