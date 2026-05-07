@@ -325,7 +325,21 @@ function App() {
           aria-label="새 품목 추가"
           onClick={() => setAddOpen(true)}
         >
-          +
+          <svg
+            className="floating-add-icon"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 5v14M5 12h14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+            />
+          </svg>
         </button>
         <AddItemModal
           isOpen={isAddOpen || Boolean(editingItem)}
