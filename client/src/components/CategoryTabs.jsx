@@ -83,26 +83,6 @@ function CategoryTabs({
               </div>
             );
           })}
-          {isEditing && onOpenSortSheet && (
-            <button
-              type="button"
-              className="category-tab is-sort-trigger"
-              onClick={onOpenSortSheet}
-              aria-label="카테고리 순서 정렬"
-            >
-              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-                <path
-                  d="M8 6h10M8 12h8M8 18h6M5 4v16M3 6l2-2 2 2M3 18l2 2 2-2"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span>정렬</span>
-            </button>
-          )}
           {isEditing && onAddCategory && (
             <button
               type="button"
@@ -112,6 +92,26 @@ function CategoryTabs({
             >
               <span className="category-tab-add-icon" aria-hidden="true">+</span>
               <span>추가</span>
+            </button>
+          )}
+          {isEditing && onOpenSortSheet && (
+            <button
+              type="button"
+              className="category-tab is-sort-trigger"
+              onClick={onOpenSortSheet}
+              aria-label="카테고리 순서 정렬"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path
+                  d="M4 7h16M4 12h12M4 17h8"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>정렬</span>
             </button>
           )}
           {onToggleEdit && (
