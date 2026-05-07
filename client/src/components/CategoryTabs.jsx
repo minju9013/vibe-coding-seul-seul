@@ -92,7 +92,7 @@ function CategoryTabs({
             >
               <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                 <path
-                  d="M8 6h10M8 12h7M8 18h4M5 5v14m0 0-2.2-2.2M5 19l2.2-2.2"
+                  d="M8 6h10M8 12h8M8 18h6M5 4v16M3 6l2-2 2 2M3 18l2 2 2-2"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
