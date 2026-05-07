@@ -6,8 +6,8 @@
 }
 
 .app-bar-inner {
-  height: 64px;
-  padding: 12px 20px;
+  height: 58px;
+  padding: 9px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
