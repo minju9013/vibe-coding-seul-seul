@@ -79,10 +79,6 @@ function ItemCard({ item, categoryEmoji, onQuantityChange, onEdit }) {
           </div>
         </div>
 
-        {item.notes ? (
-          <p className="item-notes">{item.notes}</p>
-        ) : null}
-
         <div className="item-meta-row">
           <div className="spinner">
             <button
