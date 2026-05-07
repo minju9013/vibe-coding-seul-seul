@@ -1,0 +1,111 @@
+.category-sort-sheet-root {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: none;
+}
+
+.category-sort-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(15, 23, 42, 0.45);
+  pointer-events: auto;
+}
+
+.category-sort-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: 80vh;
+  background: #fff;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+  box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+.category-sort-sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  margin: 16px auto 8px;
+}
+
+.category-sort-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px 8px;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.category-sort-sheet-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.category-sort-sheet-close {
+  border: 0;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: #6b7280;
+}
+
+.category-sort-sheet-list {
+  overflow-y: auto;
+  padding: 6px 16px 16px;
+}
+
+.category-sort-sheet-row {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.category-sort-sheet-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1f2937;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.category-sort-sheet-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.category-sort-sheet-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.category-sort-sheet-action {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.category-sort-sheet-action:disabled {
+  opacity: 0.4;
+}

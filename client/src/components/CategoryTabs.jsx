@@ -1,9 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { ALL_CATEGORY, ALL_CATEGORY_ID } from '../data/categories';
 import './CategoryTabs.css';
-
-const LONG_PRESS_MS = 220;
-const VERTICAL_CANCEL_PX = 14;
 
 function CategoryTabs({
   categories = [],
@@ -14,102 +11,21 @@ function CategoryTabs({
   onToggleEdit,
   onRequestEdit,
   onRequestDelete,
-  onReorderCategory,
+  onOpenSortSheet,
 }) {
-  const [dragId, setDragId] = useState(null);
-  const [dragOverId, setDragOverId] = useState(null);
-  const [pressId, setPressId] = useState(null); // 롱프레스 진행 중 시각 표시
-  const rowRef = useRef(null);
-  const longPressTimer = useRef(null);
-  const pointerStart = useRef({ x: 0, y: 0 });
-  const pendingDragId = useRef(null);
-
-  const cancelLongPress = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-    pendingDragId.current = null;
-    setPressId(null);
-  };
-
-  const handleCellPointerDown = (e, catId) => {
-    if (!onReorderCategory) return;
-    pointerStart.current = { x: e.clientX, y: e.clientY };
-    pendingDragId.current = catId;
-    setPressId(catId);
-    longPressTimer.current = setTimeout(() => {
-      longPressTimer.current = null;
-      setPressId(null);
-      setDragId(catId);
-      setDragOverId(null);
-      navigator.vibrate?.(15);
-    }, LONG_PRESS_MS);
-  };
-
-  const handleRowPointerMove = (e) => {
-    // 이동이 감지되면 롱프레스 취소 (스크롤 제스처 허용)
-    if (longPressTimer.current) {
-      const dy = Math.abs(e.clientY - pointerStart.current.y);
-      if (dy > VERTICAL_CANCEL_PX) {
-        cancelLongPress();
-      }
-    }
-
-    // 드래그 중일 때 hover 대상 찾기
-    if (!dragId || !rowRef.current) return;
-    e.preventDefault();
-    const cells = rowRef.current.querySelectorAll('[data-drag-id]');
-    for (const cell of cells) {
-      const rect = cell.getBoundingClientRect();
-      if (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top - 24 &&
-        e.clientY <= rect.bottom + 24
-      ) {
-        const id = cell.dataset.dragId;
-        if (id && id !== dragId) {
-          if (id !== dragOverId) setDragOverId(id);
-          return;
-        }
-      }
-    }
-  };
-
-  const handleRowPointerUp = () => {
-    cancelLongPress();
-    if (dragId && dragOverId && dragId !== dragOverId) {
-      onReorderCategory?.(dragId, dragOverId);
-    }
-    setDragId(null);
-    setDragOverId(null);
-  };
-
   const tabs = [ALL_CATEGORY, ...categories];
 
   return (
     <div className="category-tabs-wrap">
       <div className="category-tabs-scroll">
-        <div
-          ref={rowRef}
-          className={`category-tabs-row${dragId ? ' is-reordering' : ''}`}
-          onPointerMove={handleRowPointerMove}
-          onPointerUp={handleRowPointerUp}
-          onPointerLeave={handleRowPointerUp}
-        >
+        <div className="category-tabs-row">
           {tabs.map((cat) => {
             const isActive = activeCategoryId === cat.id;
             const isAll = cat.id === ALL_CATEGORY_ID;
             const showRemove = isEditing && !isAll;
             const interactsAsEdit = isEditing && !isAll;
-            const isDraggable = Boolean(isEditing && !isAll && onReorderCategory);
-            const isDragging = dragId === cat.id;
-            const isDragOver = dragOverId === cat.id;
-            const isPressing = pressId === cat.id;
 
             const handleClick = () => {
-              if (dragId) return;
               if (interactsAsEdit) {
                 onRequestEdit?.(cat);
               } else {
@@ -120,15 +36,7 @@ function CategoryTabs({
             return (
               <div
                 key={cat.id}
-                data-drag-id={isDraggable ? cat.id : undefined}
-                className={[
-                  'category-tab-cell',
-                  isDraggable ? 'is-draggable' : '',
-                  isDragging ? 'is-dragging' : '',
-                  isDragOver ? 'is-drag-over' : '',
-                  isPressing ? 'is-pressing' : '',
-                ].filter(Boolean).join(' ')}
-                onPointerDown={isDraggable ? (e) => handleCellPointerDown(e, cat.id) : undefined}
+                className="category-tab-cell"
               >
                 <button
                   type="button"
@@ -175,6 +83,26 @@ function CategoryTabs({
               </div>
             );
           })}
+          {isEditing && onOpenSortSheet && (
+            <button
+              type="button"
+              className="category-tab is-sort-trigger"
+              onClick={onOpenSortSheet}
+              aria-label="카테고리 순서 정렬"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path
+                  d="M8 6h10M8 12h7M8 18h4M5 5v14m0 0-2.2-2.2M5 19l2.2-2.2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>정렬</span>
+            </button>
+          )}
           {isEditing && onAddCategory && (
             <button
               type="button"

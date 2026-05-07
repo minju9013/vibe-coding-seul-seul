@@ -8,6 +8,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import ItemFilters from './components/ItemFilters';
 import SearchBar from './components/SearchBar';
 import Toast from './components/Toast';
+import CategorySortSheet from './components/CategorySortSheet';
 import useItems from './hooks/useItems';
 import useCategories from './hooks/useCategories';
 import { ALL_CATEGORY_ID } from './data/categories';
@@ -23,6 +24,7 @@ function App() {
   const [isEditingCategories, setEditingCategories] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [pendingDeleteCategory, setPendingDeleteCategory] = useState(null);
+  const [isCategorySortOpen, setCategorySortOpen] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   const [toast, setToast] = useState(null);
@@ -48,7 +50,6 @@ function App() {
     editCategory,
     removeCategory,
     resetCategory,
-    moveCategory,
     reorderCategory,
     MAX_LABEL_LENGTH,
   } = useCategories();
@@ -283,7 +284,7 @@ function App() {
           onToggleEdit={handleToggleEditCategories}
           onRequestEdit={handleRequestEditCategory}
           onRequestDelete={handleRequestDeleteCategory}
-          onReorderCategory={reorderCategory}
+          onOpenSortSheet={() => setCategorySortOpen(true)}
         />
         <ItemFilters
           searchQuery={searchQuery}
@@ -352,6 +353,12 @@ function App() {
           onAdd={handleAddCategory}
           onUpdate={handleEditCategory}
           onReset={handleResetCategory}
+        />
+        <CategorySortSheet
+          isOpen={isCategorySortOpen}
+          categories={categories}
+          onClose={() => setCategorySortOpen(false)}
+          onReorderCategory={reorderCategory}
         />
         <ConfirmDialog
           isOpen={Boolean(pendingDeleteCategory)}
