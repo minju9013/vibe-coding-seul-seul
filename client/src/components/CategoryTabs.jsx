@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react';
 import { ALL_CATEGORY, ALL_CATEGORY_ID } from '../data/categories';
 import './CategoryTabs.css';
 
-const LONG_PRESS_MS = 350;
-const MOVE_CANCEL_PX = 8;
+const LONG_PRESS_MS = 220;
+const VERTICAL_CANCEL_PX = 14;
 
 function CategoryTabs({
   categories = [],
@@ -50,9 +50,8 @@ function CategoryTabs({
   const handleRowPointerMove = (e) => {
     // 이동이 감지되면 롱프레스 취소 (스크롤 제스처 허용)
     if (longPressTimer.current) {
-      const dx = Math.abs(e.clientX - pointerStart.current.x);
       const dy = Math.abs(e.clientY - pointerStart.current.y);
-      if (dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) {
+      if (dy > VERTICAL_CANCEL_PX) {
         cancelLongPress();
       }
     }
