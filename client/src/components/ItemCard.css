@@ -3,13 +3,13 @@
   border-radius: 18px;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
   border: 1px solid #f0f1f3;
-  overflow: hidden;
 }
 
 .item-image-wrap {
   position: relative;
   margin: 12px 12px 0;
   border-radius: 8px;
+  overflow: hidden;
   height: 130px;
   background: #f0f2f5;
   display: flex;
