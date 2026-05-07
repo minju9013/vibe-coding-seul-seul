@@ -202,10 +202,12 @@ function ItemFilters({
             }}
           >
             <div
-              className="item-filters-sort-sheet-handle"
+              className="item-filters-sort-sheet-handle-hitbox"
               aria-hidden="true"
               onPointerDown={handleSortSheetDragStart}
-            />
+            >
+              <div className="item-filters-sort-sheet-handle" />
+            </div>
             <div className="item-filters-sort-sheet-header">
               <h3 className="item-filters-sort-sheet-title">정렬</h3>
               <button

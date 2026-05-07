@@ -318,10 +318,12 @@ function AddItemModal({
         }}
       >
         <div
-          className="add-item-handle"
+          className="add-item-handle-hitbox"
           aria-hidden="true"
           onPointerDown={handleSheetDragStart}
-        />
+        >
+          <div className="add-item-handle" />
+        </div>
         <div className="add-item-header">
           <h2 className="add-item-title">
             {isEditMode ? '품목 수정' : '새 품목 추가'}
