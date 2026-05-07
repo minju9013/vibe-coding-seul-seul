@@ -13,10 +13,14 @@ const app = express();
 
 // 공통 미들웨어
 // CORS_ORIGIN 환경변수가 있으면 해당 도메인만 허용, 없으면 전체 허용 (개발 환경)
-const corsOptions = process.env.CORS_ORIGIN
-  ? { origin: process.env.CORS_ORIGIN.split(',').map((s) => s.trim()) }
-  : {};
-app.use(cors(corsOptions));
+const buildCorsOptions = () => {
+  const raw = process.env.CORS_ORIGIN;
+  if (!raw) return {};
+  const origins = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  if (origins.length === 1 && origins[0] === '*') return { origin: '*' };
+  return { origin: origins };
+};
+app.use(cors(buildCorsOptions()));
 app.use(express.json());
 app.use(morgan('dev'));
 
