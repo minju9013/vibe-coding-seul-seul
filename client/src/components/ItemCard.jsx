@@ -17,6 +17,7 @@ function clampQuantity(value) {
 function ItemCard({ item, categoryEmoji, onQuantityChange, onEdit }) {
   const statusClass = STATUS_STYLES[item.status] || 'is-empty';
   const displayQuantity = typeof item.quantity === 'number' ? item.quantity : 0;
+  const hasNotes = Boolean((item.notes || '').trim());
 
   const handleStep = (delta) => {
     const next = clampQuantity(displayQuantity + delta);
@@ -74,7 +75,10 @@ function ItemCard({ item, categoryEmoji, onQuantityChange, onEdit }) {
       <div className="item-body">
         <div className="item-title-row">
           <div className="item-title-wrap">
-            <p className="item-title">{item.name}</p>
+            <div className="item-title-line">
+              <p className="item-title">{item.name}</p>
+              {hasNotes && <span className="item-note-dot" aria-hidden="true" />}
+            </div>
             <span className={`item-status ${statusClass}`}>{item.status}</span>
           </div>
         </div>
