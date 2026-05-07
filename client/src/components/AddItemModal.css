@@ -14,7 +14,7 @@
   inset: 0;
   border: 0;
   padding: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(15, 23, 42, 0.82);
   cursor: pointer;
   pointer-events: auto;
   animation: add-item-fade-in 180ms ease-out;
