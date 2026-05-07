@@ -27,23 +27,24 @@
   flex: none;
 }
 
-.category-tab-cell.is-draggable {
-  cursor: grab;
-  touch-action: none;
+.category-tab-cell.is-pressing > .category-tab {
+  opacity: 0.6;
+  transform: scale(0.94);
+  transition: transform 200ms ease, opacity 200ms ease;
 }
 
 .category-tab-cell.is-dragging {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .category-tab-cell.is-drag-over > .category-tab {
-  background: rgba(23, 190, 176, 0.1);
+  background: rgba(23, 190, 176, 0.12);
   border-radius: 8px;
   color: #17beb0;
 }
 
 .category-tabs-row.is-reordering {
-  cursor: grabbing;
+  touch-action: none;
   user-select: none;
 }
 
@@ -186,10 +187,8 @@
   display: block;
 }
 
-/* 편집 모드: ✕ 뱃지가 붙은 탭은 살짝 흔들리는 모션 */
 .category-tab.has-remove {
   padding-right: 26px;
-  animation: category-tab-wiggle 1.6s ease-in-out infinite;
 }
 
 .category-tab.is-editable {
@@ -219,8 +218,3 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35);
 }
 
-@keyframes category-tab-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-1deg); }
-  75% { transform: rotate(1deg); }
-}

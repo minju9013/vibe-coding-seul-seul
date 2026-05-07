@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import { ALL_CATEGORY, ALL_CATEGORY_ID } from '../data/categories';
 import './CategoryTabs.css';
 
+const LONG_PRESS_MS = 350;
+const MOVE_CANCEL_PX = 8;
+
 function CategoryTabs({
   categories = [],
   activeCategoryId,
@@ -15,26 +18,56 @@ function CategoryTabs({
 }) {
   const [dragId, setDragId] = useState(null);
   const [dragOverId, setDragOverId] = useState(null);
+  const [pressId, setPressId] = useState(null); // 롱프레스 진행 중 시각 표시
   const rowRef = useRef(null);
+  const longPressTimer = useRef(null);
+  const pointerStart = useRef({ x: 0, y: 0 });
+  const pendingDragId = useRef(null);
 
-  const tabs = [ALL_CATEGORY, ...categories];
-
-  const handleDragStart = (e, catId) => {
-    e.preventDefault();
-    setDragId(catId);
-    setDragOverId(null);
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    pendingDragId.current = null;
+    setPressId(null);
   };
 
-  const handleDragMove = (e) => {
+  const handleCellPointerDown = (e, catId) => {
+    if (!onReorderCategory) return;
+    pointerStart.current = { x: e.clientX, y: e.clientY };
+    pendingDragId.current = catId;
+    setPressId(catId);
+    longPressTimer.current = setTimeout(() => {
+      longPressTimer.current = null;
+      setPressId(null);
+      setDragId(catId);
+      setDragOverId(null);
+      navigator.vibrate?.(15);
+    }, LONG_PRESS_MS);
+  };
+
+  const handleRowPointerMove = (e) => {
+    // 이동이 감지되면 롱프레스 취소 (스크롤 제스처 허용)
+    if (longPressTimer.current) {
+      const dx = Math.abs(e.clientX - pointerStart.current.x);
+      const dy = Math.abs(e.clientY - pointerStart.current.y);
+      if (dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) {
+        cancelLongPress();
+      }
+    }
+
+    // 드래그 중일 때 hover 대상 찾기
     if (!dragId || !rowRef.current) return;
+    e.preventDefault();
     const cells = rowRef.current.querySelectorAll('[data-drag-id]');
     for (const cell of cells) {
       const rect = cell.getBoundingClientRect();
       if (
         e.clientX >= rect.left &&
         e.clientX <= rect.right &&
-        e.clientY >= rect.top - 20 &&
-        e.clientY <= rect.bottom + 20
+        e.clientY >= rect.top - 24 &&
+        e.clientY <= rect.bottom + 24
       ) {
         const id = cell.dataset.dragId;
         if (id && id !== dragId) {
@@ -45,7 +78,8 @@ function CategoryTabs({
     }
   };
 
-  const handleDragEnd = () => {
+  const handleRowPointerUp = () => {
+    cancelLongPress();
     if (dragId && dragOverId && dragId !== dragOverId) {
       onReorderCategory?.(dragId, dragOverId);
     }
@@ -53,15 +87,17 @@ function CategoryTabs({
     setDragOverId(null);
   };
 
+  const tabs = [ALL_CATEGORY, ...categories];
+
   return (
     <div className="category-tabs-wrap">
       <div className="category-tabs-scroll">
         <div
           ref={rowRef}
           className={`category-tabs-row${dragId ? ' is-reordering' : ''}`}
-          onPointerMove={dragId ? handleDragMove : undefined}
-          onPointerUp={dragId ? handleDragEnd : undefined}
-          onPointerLeave={dragId ? handleDragEnd : undefined}
+          onPointerMove={handleRowPointerMove}
+          onPointerUp={handleRowPointerUp}
+          onPointerLeave={handleRowPointerUp}
         >
           {tabs.map((cat) => {
             const isActive = activeCategoryId === cat.id;
@@ -71,6 +107,7 @@ function CategoryTabs({
             const isDraggable = Boolean(isEditing && !isAll && onReorderCategory);
             const isDragging = dragId === cat.id;
             const isDragOver = dragOverId === cat.id;
+            const isPressing = pressId === cat.id;
 
             const handleClick = () => {
               if (dragId) return;
@@ -90,8 +127,9 @@ function CategoryTabs({
                   isDraggable ? 'is-draggable' : '',
                   isDragging ? 'is-dragging' : '',
                   isDragOver ? 'is-drag-over' : '',
+                  isPressing ? 'is-pressing' : '',
                 ].filter(Boolean).join(' ')}
-                onPointerDown={isDraggable ? (e) => handleDragStart(e, cat.id) : undefined}
+                onPointerDown={isDraggable ? (e) => handleCellPointerDown(e, cat.id) : undefined}
               >
                 <button
                   type="button"
