@@ -531,7 +531,7 @@ function AddItemModal({
             />
           </section>
 
-          <div className="add-item-footer">
+          <div className={isEditMode ? 'add-item-footer' : 'add-item-footer is-fixed'}>
             {submitError && (
               <p className="add-item-error" role="alert">
                 {submitError}
